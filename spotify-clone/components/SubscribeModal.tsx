@@ -9,6 +9,7 @@ import { useUser } from '@/hooks/useUser';
 import toast from 'react-hot-toast';
 import { postData } from '@/libs/helpers';
 import useSubscribeModal from '@/hooks/useSubscribeModal';
+import { getStripe } from '@/libs/stripeClinet';
 
 interface SubscribeModalProps {
     products: ProductWithPrice[];
@@ -54,6 +55,9 @@ const SubscribeModal: React.FC<SubscribeModalProps> = ({ products }) => {
                 url: '/api/create-checkout-session',
                 data: { price }
             });
+
+            const stripe = await getStripe();
+            stripe?.redirectToCheckout({ sessionId });
         } catch (error) {
             toast.error((error as Error)?.message)
         } finally {
